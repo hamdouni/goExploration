@@ -71,26 +71,30 @@ body {
 }
 
 /* ===================
-    ALL: Orange Theme
+    ALL: Color Theme
    =================== */
 
 .header-container {
-    border-bottom: 20px solid #e44d26;
+    border-bottom: 20px solid #fafafa;
 }
 
 .footer-container,
 .main aside {
-    border-top: 20px solid #e44d26;
+    border-top: 20px solid #fafafa;
+}
+
+.footer-container a {
+    color: #333;
 }
 
 .header-container,
 .footer-container,
 .main aside {
-    background: #f16529;
+    background: #eee;
 }
 
 .title {
-    color: white;
+    color: #333;
 }
 
 /* ==============
@@ -111,13 +115,13 @@ nav a {
     text-decoration: none;
     font-weight: bold;
 
-    color: white;
-    background: #e44d26;
+    color: #333;
+    background: #fafafa;
 }
 
 nav a:hover,
 nav a:visited {
-    color: white;
+    color: #333;
 }
 
 nav a:hover {
@@ -137,12 +141,12 @@ nav a:hover {
 }
 
 .main aside {
-    color: white;
+    color: #333;
     padding: 0px 5% 10px;
 }
 
 .footer-container footer {
-    color: white;
+    color: #333;
     padding: 20px 0;
 }
 
@@ -158,7 +162,11 @@ nav a:hover {
    Author's custom styles
    ========================================================================== */
 
-
+.footer-container {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 
 
 
