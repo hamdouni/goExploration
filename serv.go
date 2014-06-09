@@ -1,23 +1,26 @@
 package main
 
 import (
-	"log"
+	"database/sql"
 	"flag"
 	"fmt"
-	"net/http"
+	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
-	"os/exec"
-	"runtime"
+	"log"
 	"mime"
+	"net/http"
+	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql" 
 )
 
-var port int
+var (
+	port  int
+	db, _ = sql.Open("mysql", "root:@/prod")
+)
 
-func browser (url string) error {
+func browser(url string) error {
 	var commands = map[string]string{
 		"windows": "start",
 		"darwin":  "open",
@@ -45,48 +48,44 @@ func loadPage(filename string) ([]byte, string, error) {
 	ext := filepath.Ext(filename)
 	mime := mime.TypeByExtension(ext)
 	return body, mime, nil
-} 
+}
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	filename := r.URL.Path[len("/"):]
 	body, mime, _ := loadPage(filename)
-	w.Header().Set("Content-Type",mime)
+	w.Header().Set("Content-Type", mime)
 	fmt.Fprintf(w, "%s", body)
 }
 
 func serviceHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
-}
-
-func main() {
-	print ("Connecting to database? ")
-	db, err := sql.Open("mysql","root:@/prod")
-	defer db.Close()
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
-	println ("OK")
-
 	var (
-		pv_id int
+		pv_id  int
 		pv_nom string
 	)
 	rows, err := db.Query("select pv_id,pv_nom from pdv limit 10")
+	defer rows.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer rows.Close()
-
 	for rows.Next() {
 		err := rows.Scan(&pv_id, &pv_nom)
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println(pv_id, pv_nom)
+		fmt.Fprintf(w, "%d : %s \n", pv_id, pv_nom)
 	}
+}
 
-	println ("Server start on port ", port)
+func main() {
+	print("Connecting to database? ")
+
+	err := db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+	println("OK")
+
+	println("Server start on port ", port)
 	http.HandleFunc("/", viewHandler)
 	http.HandleFunc("/service", serviceHandler)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
