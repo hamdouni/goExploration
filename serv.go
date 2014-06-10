@@ -57,22 +57,32 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", body)
 }
 
-func serviceHandler(w http.ResponseWriter, r *http.Request) {
+func getUsers(w http.ResponseWriter, r *http.Request) {
 	var (
-		pv_id  int
-		pv_nom string
+		u_id       int
+		u_login    string
+		u_nom      string
+		u_prenom   string
+		u_role     int
+		pdv_label  string
+		u_supprime bool
 	)
-	rows, err := db.Query("select pv_id,pv_nom from pdv limit 10")
+	rows, err := db.Query(
+		`SELECT u_id,u_login,u_nom,u_prenom,u_role,concat(u_pdv,' - ',pv_nom, ' - ',a_ville),u_supprime 
+		 FROM utilisateur LEFT JOIN pdv ON pv_id=u_pdv LEFT JOIN adresse ON a_id=pv_adr_pdv 
+		 WHERE u_nom LIKE ? or u_login LIKE ?`,
+		"hamdouni",
+		"hamdouni")
 	defer rows.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
 	for rows.Next() {
-		err := rows.Scan(&pv_id, &pv_nom)
+		err := rows.Scan(&u_id, &u_login, &u_nom, &u_prenom, &u_role, &pdv_label, &u_supprime)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintf(w, "%d : %s \n", pv_id, pv_nom)
+		fmt.Fprintf(w, "%d : %s %s %s %d %s %d \n", u_id, u_login, u_nom, u_prenom, u_role, pdv_label, u_supprime)
 	}
 }
 
@@ -87,6 +97,6 @@ func main() {
 
 	println("Server start on port ", port)
 	http.HandleFunc("/", viewHandler)
-	http.HandleFunc("/service", serviceHandler)
+	http.HandleFunc("/get/users", getUsers)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 }
