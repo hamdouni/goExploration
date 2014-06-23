@@ -1,52 +1,28 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>GO + aLight</title>
-        <meta name="description" content="Just a tuto on Angular Light">
+        <meta name="description" content="Just a playing with Go and Angular Light">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
-        <link rel="stylesheet" href="css/fa/css/font-awesome.min.css">
-
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <link rel="stylesheet" href="css/fa/font-awesome.min.css">
         <script src="js/vendor/alight.last.min.js"></script>
         <script src="js/vendor/animate.min.js"></script>
-
     </head>
     <body al-app>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-        <div class="header-container">
-            <header class="wrapper clearfix">
-                <h1 class="title">GO + aLight</h1>
-            </header>
-        </div>
-
-        <div class="main-container">
-            <div class="main wrapper clearfix">
-
-                <input type="text" placeholder="type here..." al-value="text" autofocus>
-                <h1>Hello {{text}}</h1>
-
-                <a href="/get/users">get users</a>
-                
-            </div> <!-- #main -->
-        </div> <!-- #main-container -->
-
-        <div class="footer-container">
-            <footer class="wrapper">
-                Made with <i class="fa fa-heart"></i> by <a href="http://hamdouni.github.com">Brahim Hamdouni</a>
-            </footer>
-        </div>
-
+        <header class="wrapper clearfix">
+            <h1 class="title">GO + aLight</h1>
+        </header>
+        <div class="main">
+            <input type="text" placeholder="type here..." al-value="text" autofocus>
+            <h1>Hello {{text}}</h1>
+            <a href="/get/users">get users</a>
+        </div> <!-- #main -->
+        <footer class="wrapper">
+        Made with <i class="fa fa-heart"></i> by <a href="http://hamdouni.github.com">Brahim Hamdouni</a>
+        </footer>
         <script src="js/main.js"></script>
-
     </body>
 </html>

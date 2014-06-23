@@ -1,3 +1,8 @@
+// Copyright 2014 Brahim HAMDOUNI. All rights reserved.
+// Use of this source code is governed by SIT license
+// that can be found in the SIT LICENSE file
+
+// bdd connect to a mysql database and retrieve some datas and print them
 package main
 
 import (
