@@ -64,13 +64,13 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
 	var (
-		u_id       int
-		u_login    string
-		u_nom      string
-		u_prenom   string
-		u_role     int
-		pdv_label  string
-		u_supprime bool
+		uId       int
+		uLogin    string
+		uNom      string
+		uPrenom   string
+		uRole     int
+		pdvLabel  string
+		uSupprime bool
 	)
 	rows, err := db.Query(
 		`SELECT u_id,u_login,u_nom,u_prenom,u_role,concat(u_pdv,' - ',pv_nom, ' - ',a_ville),u_supprime 
@@ -83,11 +83,11 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	for rows.Next() {
-		err := rows.Scan(&u_id, &u_login, &u_nom, &u_prenom, &u_role, &pdv_label, &u_supprime)
+		err := rows.Scan(&uId, &uLogin, &uNom, &uPrenom, &uRole, &pdvLabel, &uSupprime)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintf(w, "%d : %s %s %s %d %s %d \n", u_id, u_login, u_nom, u_prenom, u_role, pdv_label, u_supprime)
+		fmt.Fprintf(w, "%d : %s %s %s %d %s %d \n", uId, uLogin, uNom, uPrenom, uRole, pdvLabel, uSupprime)
 	}
 }
 
