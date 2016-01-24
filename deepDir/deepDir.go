@@ -13,35 +13,32 @@ import (
 
 func main() {
 
-	var allDirectories []string
-	var index = 0
+	var allDir []string
 
 	switch l := len(os.Args); {
 	case l == 2:
-		allDirectories = append(allDirectories, os.Args[1])
+		allDir = append(allDir, os.Args[1])
 	case l == 1:
-		allDirectories = append(allDirectories, ".")
+		allDir = append(allDir, ".")
 	default:
 		println("usage: deepDir [directory]")
 		os.Exit(1)
 	}
 
-	for {
-		var dir = allDirectories[index]
-		fmt.Println("\n\n" + dir)
+	for index := 0; index < len(allDir); index++ {
+		var dir = allDir[index]
+		fmt.Print("\n [" + dir + "] ")
 
 		var allEntries, _ = ioutil.ReadDir(dir)
-		for i := 0; i < len(allEntries); i++ {
-			if allEntries[i].IsDir() {
-				allDirectories = append(allDirectories, dir+"/"+allEntries[i].Name())
-				fmt.Print(allEntries[i].Name() + "/ ")
+		for _, entry := range allEntries {
+			var name = entry.Name()
+			if entry.IsDir() {
+				allDir = append(allDir, dir+"/"+name)
+				fmt.Print(name + "/ ")
 			} else {
-				fmt.Print(allEntries[i].Name() + " ")
+				fmt.Print(name + " ")
 			}
 		}
-		index++
-		if index >= len(allDirectories) {
-			break
-		}
 	}
+	fmt.Print("\n")
 }
