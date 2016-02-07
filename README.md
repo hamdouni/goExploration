@@ -1,1 +1,1 @@
-Just my testing with Go Lang
+Testing Go
