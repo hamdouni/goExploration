@@ -1,4 +1,4 @@
-package main
+package listechainee
 
 type Cellule struct {
 	Suivant *Cellule
@@ -26,15 +26,4 @@ func (c *Cellule) PrintAll() {
 		c = c.Suivant
 		c.Print()
 	}
-}
-
-func main() {
-
-	var liste Cellule
-
-	for i := 1; i < 5; i++ {
-		liste.Ajouter(99 + i)
-	}
-
-	liste.PrintAll()
 }
