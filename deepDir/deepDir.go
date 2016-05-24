@@ -6,37 +6,48 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
+	"strings"
 )
 
 func main() {
 
-	var allDir []string
+	var dirs []string
 
-	switch l := len(os.Args); {
-	case l == 2:
-		allDir = append(allDir, os.Args[1])
+	all := flag.Bool("a", false, "do not ignore entries starting with .")
+
+	flag.Parse()
+
+	log.Println(flag.Args())
+
+	switch l := len(flag.Args()); {
 	case l == 1:
-		allDir = append(allDir, ".")
+		dirs = append(dirs, flag.Arg(0))
+	case l == 0:
+		dirs = append(dirs, ".")
 	default:
 		println("usage: deepDir [directory]")
 		os.Exit(1)
 	}
 
-	for index := 0; index < len(allDir); index++ {
-		var dir = allDir[index]
+	for index := 0; index < len(dirs); index++ {
+		var dir = dirs[index]
 		fmt.Print("\n [" + dir + "] ")
 
-		var allEntries, _ = ioutil.ReadDir(dir)
-		for _, entry := range allEntries {
+		var entries, _ = ioutil.ReadDir(dir)
+		for _, entry := range entries {
 			var name = entry.Name()
-			if entry.IsDir() {
-				allDir = append(allDir, dir+"/"+name)
-				fmt.Print(name + "/ ")
-			} else {
-				fmt.Print(name + " ")
+			if *all || !strings.HasPrefix(name, ".") {
+				if entry.IsDir() {
+					dirs = append(dirs, dir+"/"+name)
+					fmt.Print(name + "/ ")
+				} else {
+					fmt.Print(name + " ")
+				}
 			}
 		}
 	}
