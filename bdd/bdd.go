@@ -7,13 +7,14 @@ package main
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"strconv"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
-	db, _ = sql.Open("mysql", "root:@/prod?parseTime=true")
+	db, _ = sql.Open("mysql", "admin:admin@/prod?parseTime=true&multiStatements=true")
 )
 
 func main() {
@@ -21,8 +22,13 @@ func main() {
 		date     string
 		cat      string
 		quantite int
+		res      []string
+		v        int64
 	)
-	var res []string
+
+	r := db.QueryRow("SET @T=1000;SELECT @T;")
+	r.Scan(&v)
+	println(v)
 
 	rows, err := db.Query("SELECT DATE_FORMAT(v_date,'%y%m'),n_libelle,floor(sum(vd_qte*IF(p_vendupoids,1.0,p_poids))) FROM famille,produit,vente,vente_d,fournisseur,nutrition WHERE v_pdv=536 AND v_date>='2013-01-01' AND v_date<'2014-01-01' AND vd_produit=p_id AND vd_vid=v_id AND p_famille=fa_id AND p_fourn=fo_id AND fo_pdv=v_pdv AND fa_stats=n_id AND v_supprime=0 GROUP BY fa_stats,MONTH(v_date)")
 
