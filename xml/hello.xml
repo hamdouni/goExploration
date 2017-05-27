@@ -1,0 +1,16 @@
+  <hello>
+      <messages>
+          <message>
+              <OneLine>bonjour le monde</OneLine>
+              <ID>0</ID>
+          </message>
+          <message>
+              <OneLine>hello world</OneLine>
+              <ID>0</ID>
+          </message>
+          <message>
+              <OneLine>buenas el mundo</OneLine>
+              <ID>0</ID>
+          </message>
+      </messages>
+  </hello>
