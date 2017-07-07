@@ -13,8 +13,9 @@ func main() {
 	type Message struct {
 		TheMessage []OneMessage `xml:"message"`
 	}
-	type Hello struct {
-		XMLName  xml.Name `xml:"hello"`
+	type Document struct {
+		XMLName  xml.Name `xml:"document"`
+		XMLUrl   string   `xml:"xmlurl,attr"`
 		Messages Message  `xml:"messages"`
 	}
 	worldHellos := map[string]string{
@@ -32,7 +33,9 @@ func main() {
 		"Spanish":    "Hola mundo",
 	}
 
-	h := &Hello{}
+	h := &Document{
+		XMLUrl: "http://www.w3.org/2001/XMLShema-instance",
+	}
 
 	for k, v := range worldHellos {
 		h.Messages.TheMessage = append(h.Messages.TheMessage, OneMessage{
