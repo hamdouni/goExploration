@@ -5,8 +5,7 @@ import "time"
 func main() {
 	var ch []string
 	var s string
-	//var cls = "\x0c"
-	var cls = "\033[2J"
+	var cls = "\033[2J\x0c" // \033[2J clear screan on terminal and \x0c on playground
 
 	c := ")"
 	for z := 20; z >= 0; z-- {
