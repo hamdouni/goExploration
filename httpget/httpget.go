@@ -3,31 +3,25 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
-	req, err := http.NewRequest("GET", "http://apple.com", nil)
-	if err != nil {
-		fmt.Printf("%s\n", err)
-		os.Exit(1)
-	} else {
-		res, err := http.DefaultTransport.RoundTrip(req)
-		if err != nil {
-			fmt.Printf("%s\n", err)
-			os.Exit(1)
-		} else {
-			defer res.Body.Close()
-			contents, err := ioutil.ReadAll(res.Body)
-			if err != nil {
-				fmt.Printf("%s\n", err)
-				os.Exit(1)
-			} else {
-				fmt.Printf("Content: %s\n", string(contents))
-				fmt.Printf("Finale url: %s\n", res.Request.URL.String())
-				fmt.Printf("Status: %s\n", res.Status)
-			}
-		}
+	req, err := http.NewRequest("GET", "http://golang.org", nil)
+	exitonerror(err)
+
+	res, err := http.DefaultTransport.RoundTrip(req)
+	exitonerror(err)
+
+	defer res.Body.Close()
+	contents, err := ioutil.ReadAll(res.Body)
+	exitonerror(err)
+
+	fmt.Printf("Content: %s\nFinale url: %s\nStatus: %s\n", string(contents), res.Request.URL.String(), res.Status)
+}
+func exitonerror(e error) {
+	if e != nil {
+		log.Fatalf("%s\n", e)
 	}
 }
