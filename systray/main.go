@@ -42,7 +42,7 @@ func onReady() {
 		mChecked := systray.AddMenuItem("Unchecked", "Check Me")
 		mEnabled := systray.AddMenuItem("Enabled", "Enabled")
 		systray.AddMenuItem("Ignored", "Ignored")
-		mUrl := systray.AddMenuItem("Open Lantern.org", "my home")
+		mURL := systray.AddMenuItem("Open Lantern.org", "my home")
 		mQuit := systray.AddMenuItem("退出", "Quit the whole app")
 		systray.AddSeparator()
 		mToggle := systray.AddMenuItem("Toggle", "Toggle the Quit button")
@@ -62,7 +62,7 @@ func onReady() {
 			case <-mEnabled.ClickedCh:
 				mEnabled.SetTitle("Disabled")
 				mEnabled.Disable()
-			case <-mUrl.ClickedCh:
+			case <-mURL.ClickedCh:
 				open.Run("https://www.getlantern.org")
 			case <-mToggle.ClickedCh:
 				if shown {
