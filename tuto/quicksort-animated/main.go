@@ -3,6 +3,7 @@ package main
 
 import (
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -35,19 +36,22 @@ func qs(t []int) {
 }
 
 func showTableau(start, end int) {
-	print("\033[2J\x0cQUICK SORTING\n")
+	s := "\033[2J\x0cQUICK SORTING\n"
 	for i, c := range tableau {
-		if i == start || i == end {
-			print(">")
+		if i == start {
+			s += "<"
+		} else if i == end {
+			s += ">"
 		} else {
-			print(" ")
+			s += " "
 		}
-		print(" ", c, " ")
+		s = s + strconv.Itoa(c) + " "
 		for i := 0; i < c; i++ {
-			print("*")
+			s += "*"
 		}
-		println()
+		s += "\n"
 	}
+	print(s)
 	time.Sleep(time.Second / 10)
 }
 
