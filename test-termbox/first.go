@@ -4,12 +4,12 @@ import "github.com/nsf/termbox-go"
 
 func mainMenu(menu []string, sel int) {
 	for i := 1; i <= len(menu); i++ {
-		DrawRichLine(1, i, menu[i-1], (sel == i))
+		drawRichLine(1, i, menu[i-1], (sel == i))
 	}
 	termbox.Flush()
 }
 
-func DrawRichLine(x, y int, text string, highlight bool) {
+func drawRichLine(x, y int, text string, highlight bool) {
 	fg := termbox.ColorWhite
 	bg := termbox.ColorBlack
 
