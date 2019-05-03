@@ -61,6 +61,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		filename = "index.html"
 	}
 	body, mime, err := loadPage(filename)
+	if err != nil {
+		log.Printf("Get error : %v \n", err)
+		http.NotFound(w, r)
+		return
+	}
 	w.Header().Set("Content-Type", mime)
 	fmt.Fprintf(w, "%s", body)
 }
