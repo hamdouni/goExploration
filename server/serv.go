@@ -9,7 +9,6 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"log"
 	"mime"
@@ -18,6 +17,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
@@ -84,8 +85,8 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 		`SELECT u_id,u_login,u_nom,u_prenom,u_role,concat(u_pdv,' - ',pv_nom, ' - ',a_ville),u_supprime 
 		 FROM utilisateur LEFT JOIN pdv ON pv_id=u_pdv LEFT JOIN adresse ON a_id=pv_adr_pdv 
 		 WHERE u_nom LIKE ? or u_login LIKE ?`,
-		"hamdouni",
-		"hamdouni")
+		"test",
+		"test")
 	defer rows.Close()
 	if err != nil {
 		log.Fatal(err)
