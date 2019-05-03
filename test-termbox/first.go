@@ -28,10 +28,10 @@ func main() {
 	}
 	defer termbox.Close()
 
-	event_queue := make(chan termbox.Event)
+	eventQueue := make(chan termbox.Event)
 	go func() {
 		for {
-			event_queue <- termbox.PollEvent()
+			eventQueue <- termbox.PollEvent()
 		}
 	}()
 
@@ -43,7 +43,7 @@ func main() {
 loop:
 	for {
 		select {
-		case ev := <-event_queue:
+		case ev := <-eventQueue:
 			if ev.Type == termbox.EventKey && ev.Key == termbox.KeyEsc {
 				break loop
 			}
