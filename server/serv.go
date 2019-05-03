@@ -95,7 +95,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintf(w, "%d : %s %s %s %d %s %d \n", uId, uLogin, uNom, uPrenom, uRole, pdvLabel, uSupprime)
+		fmt.Fprintf(w, "%d : %s %s %s %d %s %v \n", uId, uLogin, uNom, uPrenom, uRole, pdvLabel, uSupprime)
 	}
 }
 
