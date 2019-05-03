@@ -73,7 +73,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
 func getUsers(w http.ResponseWriter, r *http.Request) {
 	var (
-		uId       int
+		uID       int
 		uLogin    string
 		uNom      string
 		uPrenom   string
@@ -92,11 +92,11 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	for rows.Next() {
-		err := rows.Scan(&uId, &uLogin, &uNom, &uPrenom, &uRole, &pdvLabel, &uSupprime)
+		err := rows.Scan(&uID, &uLogin, &uNom, &uPrenom, &uRole, &pdvLabel, &uSupprime)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintf(w, "%d : %s %s %s %d %s %v \n", uId, uLogin, uNom, uPrenom, uRole, pdvLabel, uSupprime)
+		fmt.Fprintf(w, "%d : %s %s %s %d %s %v \n", uID, uLogin, uNom, uPrenom, uRole, pdvLabel, uSupprime)
 	}
 }
 
