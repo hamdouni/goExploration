@@ -1,6 +1,10 @@
 package main
 
-import "github.com/nsf/termbox-go"
+import (
+	"os"
+
+	"github.com/nsf/termbox-go"
+)
 
 func mainMenu(menu []string, sel int) {
 	for i := 1; i <= len(menu); i++ {
@@ -40,12 +44,11 @@ func main() {
 	maxMenu := len(menu)
 	mainMenu(menu, selMenu)
 
-loop:
 	for {
 		select {
 		case ev := <-eventQueue:
 			if ev.Type == termbox.EventKey && ev.Key == termbox.KeyEsc {
-				break loop
+				os.Exit(0)
 			}
 			if ev.Type == termbox.EventKey && ev.Key == termbox.KeyArrowDown && selMenu < maxMenu {
 				selMenu++
