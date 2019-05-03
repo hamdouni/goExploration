@@ -57,7 +57,10 @@ func loadPage(filename string) ([]byte, string, error) {
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
 	filename := r.URL.Path[len("/"):]
-	body, mime, _ := loadPage(filename)
+	if filename == "" {
+		filename = "index.html"
+	}
+	body, mime, err := loadPage(filename)
 	w.Header().Set("Content-Type", mime)
 	fmt.Fprintf(w, "%s", body)
 }
