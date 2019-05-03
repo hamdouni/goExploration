@@ -11,15 +11,15 @@ import (
 )
 
 func main() {
-	onExit := func() {
+	// Should be called at the very beginning of main().
+	systray.Run(onReady, onExit)
+}
+func onExit() {
 		fmt.Println("Starting onExit")
 		now := time.Now()
 		ioutil.WriteFile(fmt.Sprintf(`on_exit_%d.txt`, now.UnixNano()), []byte(now.String()), 0644)
 		fmt.Println("Finished onExit")
 	}
-	// Should be called at the very beginning of main().
-	systray.Run(onReady, onExit)
-}
 
 func onReady() {
 	systray.SetIcon(icon.Data)
