@@ -14,9 +14,7 @@ func DrawRichLine(x, y int, text string, highlight bool) {
 	bg := termbox.ColorBlack
 
 	if highlight {
-		tmp := fg
-		fg = bg
-		bg = tmp
+		fg, bg = bg, fg
 	}
 	for index, ch := range text {
 		termbox.SetCell(x+index, y, ch, fg, bg)
