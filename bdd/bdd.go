@@ -7,26 +7,53 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"strconv"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	db, _ = sql.Open("mysql", "admin:admin@/prod?parseTime=true&multiStatements=true")
-)
+// dbConnect tries to connect to a database whth given dsn and driver
+// every second before timeout reached.
+// as seen on https://alex.dzyoba.com/blog/go-connect-loop
+func dbConnect(driver, dsn string, timeout time.Duration) (*sql.DB, error) {
+	db, err := sql.Open(driver, dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	timeoutReached := time.After(timeout)
+
+	for {
+		select {
+		case <-timeoutReached:
+			return nil, fmt.Errorf("Failed to connect to database after %s timeout", timeout)
+		case <-ticker.C:
+			err = db.Ping()
+			if err == nil {
+				return db, nil
+			}
+			log.Printf("Impossible de se connecter. Erreur = %v", err)
+		}
+	}
+
+}
 
 func main() {
-	var (
-		date     string
-		cat      string
-		quantite int
-		res      []string
-		v        int64
-	)
+
+	db, err := dbConnect("mysql", "admin:admin@/prod?parseTime=true&multiStatements=true", 3*time.Second)
+	if err != nil {
+		log.Fatalf("Impossible d'ouvrir la db. Erreur = %v", err)
+	}
 
 	r := db.QueryRow("SET @T=1000;SELECT @T;")
+
+	var v int64
 	r.Scan(&v)
 	println(v)
 
@@ -36,6 +63,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	var (
+		date     string
+		cat      string
+		quantite int
+		res      []string
+	)
 	for rows.Next() {
 		err := rows.Scan(&date, &cat, &quantite)
 		if err != nil {
