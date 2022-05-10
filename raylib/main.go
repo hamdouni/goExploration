@@ -1,21 +1,31 @@
 package main
 
-import "github.com/gen2brain/raylib-go/raylib"
+import rl "github.com/gen2brain/raylib-go/raylib"
 
 func main() {
-	raylib.InitWindow(400, 225, "raylib [core] example - basic window")
 
-	raylib.SetTargetFPS(60)
+	height := int32(rl.GetScreenHeight())
+	width := int32(rl.GetScreenWidth())
+	rl.InitWindow(width, height, "raylib [core] example - basic window")
 
-	for !raylib.WindowShouldClose() {
-		raylib.BeginDrawing()
+	rl.SetTargetFPS(60)
 
-		raylib.ClearBackground(raylib.Black)
+	var posY int32 = 200
 
-		raylib.DrawText("My first window!", 95, 100, 20, raylib.LightGray)
+	for !rl.WindowShouldClose() {
+		rl.BeginDrawing()
 
-		raylib.EndDrawing()
+		rl.ClearBackground(rl.RayWhite)
+
+		rl.DrawText("Congrats! You created your first window!", 190, posY, 20, rl.Black)
+
+		rl.EndDrawing()
+
+		posY--
+		if posY < 0 {
+			posY = height - 100
+		}
 	}
 
-	raylib.CloseWindow()
+	rl.CloseWindow()
 }

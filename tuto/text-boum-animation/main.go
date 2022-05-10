@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 	var ch []string
@@ -23,4 +26,5 @@ func main() {
 		}
 	}
 	println(cls, "BOUM")
+	fmt.Printf("Hello le %v\n", "Rendu")
 }
