@@ -10,12 +10,14 @@ import (
 	_ "modernc.org/sqlite"
 )
 
-const dsnURI = "./toto.db"
+const dbpath = "./toto.db"
+const pragma = "_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_pragma=busy_timeout(8000)&_pragma=journal_size_limit(100000000)"
 
 func main() {
-	db, err := sql.Open("sqlite", dsnURI)
+	dsn := fmt.Sprintf("%s?%s", dbpath, pragma)
+	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
-		log.Fatalf("error opening database %s got %s", dsnURI, err)
+		log.Fatalf("error opening database %s got %s", dbpath, err)
 	}
 	defer db.Close()
 
@@ -25,7 +27,7 @@ func main() {
 
 	stmt, err := db.Prepare(query)
 	if err != nil {
-		log.Fatalf("error insert into database %s got %s", dsnURI, err)
+		log.Fatalf("error insert into database %s got %s", dsn, err)
 	}
 
 	res, err := stmt.Exec("barim", "si", "1972-06-02")
