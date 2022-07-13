@@ -10,9 +10,8 @@ require (
 	github.com/nsf/termbox-go v0.0.0-20190121233118-02980233997d
 	github.com/webview/webview v0.0.0-20210201104136-ce27be3bc811
 	gocv.io/x/gocv v0.22.0
-	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
 	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d // indirect
-	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
+	modernc.org/sqlite v1.17.3
 )
 
 go 1.13
