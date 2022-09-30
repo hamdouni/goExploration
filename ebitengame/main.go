@@ -52,9 +52,16 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	// the origin point is the upper-left corner.
 	op.GeoM.Translate(-float64(w)/2, -float64(h)/2)
 
+	// Magic coef
+	coef := float64(g.count%360) * 2 * math.Pi / 360
+
 	// Rotate the image. As a result, the anchor point of this rotate is
 	// the center of the image.
-	op.GeoM.Rotate(float64(g.count%360) * 2 * math.Pi / 360)
+	op.GeoM.Rotate(coef)
+
+	// Zoom/Dezoom
+	factor := 7 + 5*math.Sin(coef)
+	op.GeoM.Scale(factor, factor)
 
 	// Move the image to the screen's center.
 	op.GeoM.Translate(float64(screenWidth)/2, float64(screenHeight)/2)
