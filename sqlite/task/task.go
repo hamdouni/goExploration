@@ -7,10 +7,6 @@ const (
 	Closed
 )
 
-var config = struct {
-	repo repository
-}{}
-
 type Item struct {
 	ID          int
 	Description string
@@ -25,6 +21,10 @@ type repository interface {
 	GetOpened() []Item
 	GetClosed() []Item
 }
+
+var config = struct {
+	repo repository
+}{}
 
 func Init(r repository) {
 	config.repo = r

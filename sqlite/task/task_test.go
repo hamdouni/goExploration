@@ -2,13 +2,14 @@ package task_test
 
 import (
 	"fmt"
+	"goExploration/sqlite/repo/ram"
 	"goExploration/sqlite/task"
 	"testing"
 )
 
 // Fake repo of 6 tasks : 3 opened and 3 closed
-func initFakeRepo() list {
-	taskRepo := list{}
+func initFakeRepo() ram.List {
+	taskRepo := ram.List{}
 	task.Init(&taskRepo)
 	for i := 0; i < 3; i++ {
 		task.Create(fmt.Sprintf("write a book %v", i))
@@ -21,7 +22,6 @@ func initFakeRepo() list {
 }
 
 func TestSave(t *testing.T) {
-	// Create a repo for saving tasks
 	taskRepo := initFakeRepo()
 	id := 2
 	item, err := taskRepo.Get(id)
@@ -90,45 +90,40 @@ func TestGetClosed(t *testing.T) {
 	}
 }
 
-// Fake Repo as a simple slice
-type list struct {
-	repo []task.Item
+func TestCreateTask(t *testing.T) {
+	repo := ram.List{}
+	task.Init(&repo)
+	want := "Only test the parts of the application that you want to work"
+	id := task.Create(want)
+	got, err := repo.Get(id)
+	if err != nil {
+		t.Fatalf("expected item id %d exists got %s", id, err)
+	}
+	if got.Description != want {
+		t.Fatalf("expected %s got %s", want, got)
+	}
 }
 
-func (l *list) Save(t task.Item) (ID int) {
-	t.ID = len(l.repo)
-	l.repo = append(l.repo, t)
-	return t.ID
-}
-func (l list) Get(ID int) (t task.Item, err error) {
-	for _, it := range l.repo {
-		if it.ID == ID {
-			return it, nil
-		}
+func TestCloseTask(t *testing.T) {
+	repo := ram.List{}
+	task.Init(&repo)
+	empty := len(repo.GetAll())
+	if 0 != empty {
+		t.Fatalf("expected empty repo but got %d", empty)
 	}
-	return t, fmt.Errorf("Could not found ID %d", ID)
-}
-func (l list) GetAll() []task.Item {
-	return l.repo
-}
-func (l list) GetOpened() []task.Item {
-	var items []task.Item
-	for _, it := range l.repo {
-		if it.State == task.Opened {
-			items = append(items, it)
-		}
+	want := "The only way to get more done is to have less to do"
+	id := task.Create(want)
+	closed := len(repo.GetClosed())
+	if 0 != closed {
+		t.Fatalf("expected no closed item in repo got %d", closed)
 	}
-	return items
-}
-func (l list) GetClosed() []task.Item {
-	var items []task.Item
-	for _, it := range l.repo {
-		if it.State == task.Closed {
-			items = append(items, it)
-		}
+	task.Close(id)
+	closed = len(repo.GetClosed())
+	if 1 != closed {
+		t.Fatalf("expected 1 closed item in repo got %d", closed)
 	}
-	return items
-}
-func (l *list) Update(item task.Item) {
-	l.repo[item.ID] = item
+	got := repo.GetClosed()[0].Description
+	if got != want {
+		t.Fatalf("expected closed item to be '%s' got '%s'", want, got)
+	}
 }
