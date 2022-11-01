@@ -3,9 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"time"
-
 	"log"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -22,6 +21,12 @@ func main() {
 	defer db.Close()
 
 	log.Println("starting...")
+
+	initQuery := "CREATE TABLE IF NOT EXISTS `userinfo` ( `uid` INTEGER PRIMARY KEY AUTOINCREMENT, `username` VARCHAR(64) NULL, `departname` VARCHAR(64) NULL, `created` DATE NULL)"
+	_, err = db.Exec(initQuery)
+	if err != nil {
+		log.Fatalf("error creating table `userinfo` got %s", err)
+	}
 
 	query := "INSERT INTO userinfo(username, departname, created) values(?,?,?)"
 
