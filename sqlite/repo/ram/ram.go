@@ -11,7 +11,7 @@ type List struct {
 	repo []task.Item
 }
 
-func (l *List) Close() error {
+func (l List) Close() error {
 	return nil
 }
 
@@ -20,10 +20,10 @@ func (l *List) Save(t task.Item) (ID int, err error) {
 	l.repo = append(l.repo, t)
 	return t.ID, nil
 }
-func (l *List) GetAll() []task.Item {
+func (l List) GetAll() []task.Item {
 	return l.repo
 }
-func (l *List) GetByID(ID int) (t task.Item, err error) {
+func (l List) GetByID(ID int) (t task.Item, err error) {
 	for _, it := range l.repo {
 		if it.ID == ID {
 			return it, nil
@@ -31,7 +31,7 @@ func (l *List) GetByID(ID int) (t task.Item, err error) {
 	}
 	return t, fmt.Errorf("Could not found ID %d", ID)
 }
-func (l *List) GetByState(st task.State) []task.Item {
+func (l List) GetByState(st task.State) []task.Item {
 	var items []task.Item
 	for _, it := range l.repo {
 		if it.State == st {
