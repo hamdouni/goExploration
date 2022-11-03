@@ -1,10 +1,10 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
+	"goExploration/sqlite/repo/db"
+	"goExploration/sqlite/task"
 	"log"
-	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -13,60 +13,26 @@ const dbpath = "./toto.db"
 const pragma = "_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_pragma=busy_timeout(8000)&_pragma=journal_size_limit(100000000)"
 
 func main() {
-	dsn := fmt.Sprintf("%s?%s", dbpath, pragma)
-	db, err := sql.Open("sqlite", dsn)
-	if err != nil {
-		log.Fatalf("error opening database %s got %s", dbpath, err)
-	}
-	defer db.Close()
 
 	log.Println("starting...")
 
-	initQuery := "CREATE TABLE IF NOT EXISTS `userinfo` ( `uid` INTEGER PRIMARY KEY AUTOINCREMENT, `username` VARCHAR(64) NULL, `departname` VARCHAR(64) NULL, `created` DATE NULL)"
-	_, err = db.Exec(initQuery)
+	store, err := db.Open(dbpath, pragma)
 	if err != nil {
-		log.Fatalf("error creating table `userinfo` got %s", err)
+		log.Fatalf("could not open database %s: %s", dbpath, err)
 	}
+	defer store.Close()
 
-	query := "INSERT INTO userinfo(username, departname, created) values(?,?,?)"
+	task.Init(&store)
 
-	stmt, err := db.Prepare(query)
+	id, err := task.Create("faire un café")
 	if err != nil {
-		log.Fatalf("error insert into database %s got %s", dsn, err)
-	}
-
-	res, err := stmt.Exec("barim", "si", "1972-06-02")
-	if err != nil {
-		log.Fatalf("error executing query %s got %s", query, err)
-	}
-
-	id, err := res.LastInsertId()
-	if err != nil {
-		log.Fatalf("error retrieving last id got %s", err)
+		log.Fatalf("could not create task %s", err)
 	}
 	log.Printf("last id %d", id)
 
-	query = "SELECT * FROM userinfo"
-
-	rows, err := db.Query(query)
-	if err != nil {
-		log.Fatalf("error executing query %s got %s", query, err)
-	}
-
-	var (
-		uid        int
-		username   string
-		department string
-		created    time.Time
-	)
-
-	for rows.Next() {
-		err = rows.Scan(&uid, &username, &department, &created)
-		if err != nil {
-			log.Printf("warning scanning results got %s", err)
-			continue
-		}
-		fmt.Printf("uid: %d username: %s department: %s date: %v\n", uid, username, department, created)
+	items := store.GetAll()
+	for _, item := range items {
+		fmt.Printf("uid: %d description: %s state: %d\n", item.ID, item.Description, item.State)
 	}
 
 }

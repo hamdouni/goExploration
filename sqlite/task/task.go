@@ -13,23 +13,24 @@ type Item struct {
 	State       State
 }
 
-type repository interface {
-	Save(Item) (ID int)
-	Update(Item)
+type Repository interface {
+	Save(Item) (ID int, err error)
+	Update(Item) error
 	GetAll() []Item
 	GetByID(ID int) (Item, error)
-	GetByState(st State) []Item
+	GetByState(status State) []Item
+	Close() error
 }
 
 var config = struct {
-	repo repository
+	repo Repository
 }{}
 
-func Init(r repository) {
+func Init(r Repository) {
 	config.repo = r
 }
 
-func Create(desc string) int {
+func Create(desc string) (int, error) {
 	return config.repo.Save(Item{
 		Description: desc,
 		State:       Opened,
@@ -42,8 +43,7 @@ func Close(ID int) error {
 		return err
 	}
 	it.State = Closed
-	config.repo.Update(it)
-	return nil
+	return config.repo.Update(it)
 }
 
 func (it Item) String() string {
