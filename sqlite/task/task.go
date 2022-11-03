@@ -1,25 +1,24 @@
 package task
 
-type state int
+type State int
 
 const (
-	Opened state = iota
+	Opened State = iota
 	Closed
 )
 
 type Item struct {
 	ID          int
 	Description string
-	State       state
+	State       State
 }
 
 type repository interface {
 	Save(Item) (ID int)
 	Update(Item)
-	Get(ID int) (Item, error)
 	GetAll() []Item
-	GetOpened() []Item
-	GetClosed() []Item
+	GetByID(ID int) (Item, error)
+	GetByState(st State) []Item
 }
 
 var config = struct {
@@ -38,7 +37,7 @@ func Create(desc string) int {
 }
 
 func Close(ID int) error {
-	it, err := config.repo.Get(ID)
+	it, err := config.repo.GetByID(ID)
 	if err != nil {
 		return err
 	}

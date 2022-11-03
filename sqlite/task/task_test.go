@@ -24,7 +24,7 @@ func initFakeRepo() ram.List {
 func TestSave(t *testing.T) {
 	taskRepo := initFakeRepo()
 	id := 2
-	item, err := taskRepo.Get(id)
+	item, err := taskRepo.GetByID(id)
 	if err != nil {
 		t.Fatalf("could not get task id %v: %v", id, err)
 	}
@@ -60,7 +60,7 @@ func TestGetAll(t *testing.T) {
 
 func TestGetOpened(t *testing.T) {
 	taskRepo := initFakeRepo()
-	openedItems := taskRepo.GetOpened()
+	openedItems := taskRepo.GetByState(task.Opened)
 	size := len(openedItems)
 	if size != 3 {
 		t.Fatalf("expected size 3 got %v", size)
@@ -76,7 +76,7 @@ func TestGetOpened(t *testing.T) {
 
 func TestGetClosed(t *testing.T) {
 	taskRepo := initFakeRepo()
-	closedItems := taskRepo.GetClosed()
+	closedItems := taskRepo.GetByState(task.Closed)
 	size := len(closedItems)
 	if size != 3 {
 		t.Fatalf("expected size 3 got %v", size)
@@ -95,7 +95,7 @@ func TestCreateTask(t *testing.T) {
 	task.Init(&repo)
 	want := "Only test the parts of the application that you want to work"
 	id := task.Create(want)
-	got, err := repo.Get(id)
+	got, err := repo.GetByID(id)
 	if err != nil {
 		t.Fatalf("expected item id %d exists got %s", id, err)
 	}
@@ -113,16 +113,16 @@ func TestCloseTask(t *testing.T) {
 	}
 	want := "The only way to get more done is to have less to do"
 	id := task.Create(want)
-	closed := len(repo.GetClosed())
+	closed := len(repo.GetByState(task.Closed))
 	if 0 != closed {
 		t.Fatalf("expected no closed item in repo got %d", closed)
 	}
 	task.Close(id)
-	closed = len(repo.GetClosed())
+	closed = len(repo.GetByState(task.Closed))
 	if 1 != closed {
 		t.Fatalf("expected 1 closed item in repo got %d", closed)
 	}
-	got := repo.GetClosed()[0].Description
+	got := repo.GetByState(task.Closed)[0].Description
 	if got != want {
 		t.Fatalf("expected closed item to be '%s' got '%s'", want, got)
 	}
