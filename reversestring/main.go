@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Printf("%s\n", rev("bonjou"))
+	fmt.Printf("%s\n", rev("bonjour"))
 }
 
 func rev(chaine string) string {
