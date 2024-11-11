@@ -1,46 +1,38 @@
 package main
 
-import (
-	"log"
+import webview "github.com/CodeCadim/webview_go"
 
-	"github.com/webview/webview"
-)
+const html = `<button id="increment">Tap me</button>
+<div>You tapped <span id="count">0</span> time(s).</div>
+<script>
+  const [incrementElement, countElement] =
+    document.querySelectorAll("#increment, #count");
+  document.addEventListener("DOMContentLoaded", () => {
+    incrementElement.addEventListener("click", () => {
+      window.increment().then(result => {
+        countElement.textContent = result.count;
+      });
+    });
+  });
+</script>`
+
+type IncrementResult struct {
+	Count uint `json:"count"`
+}
 
 func main() {
-	w := webview.New(true)
+	var count uint = 0
+	w := webview.New(false)
 	defer w.Destroy()
-	w.SetTitle("Hello")
-	w.Bind("noop", func() string {
-		log.Println("hello")
-		return "hello"
+	w.SetTitle("FLOAT")
+	w.SetSize(480, 320, webview.HintNone)
+
+	// A binding that increments a value and immediately returns the new value.
+	w.Bind("increment", func() IncrementResult {
+		count++
+		return IncrementResult{Count: count}
 	})
-	w.Bind("add", func(a, b int) int {
-		return a + b
-	})
-	w.Bind("quit", func() {
-		w.Terminate()
-	})
-	w.Navigate(`data:text/html,
-		<!doctype html>
-		<html>
-			<body>hello</body>
-			<button id="myBtn">QUIT</button>
-			<button id="addBtn">1 + 2</button>
-			<script>
-				doquit = function() {
-					quit();
-				};
-				doadd = function() {
-					add(1,2).then(function(res){
-						alert(res);
-					});
-				}
-				window.onload = function() {
-					document.getElementById("myBtn").addEventListener("click", doquit); 
-					document.getElementById("addBtn").addEventListener("click", doadd);
-				};
-			</script>
-		</html>
-	`)
+
+	w.SetHtml(html)
 	w.Run()
 }
